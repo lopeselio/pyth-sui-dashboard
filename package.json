@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "name": "pyth-sui-dashboard",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "sentio build",
+    "gen": "sentio gen",
+    "test": "sentio test",
+    "upload": "sentio upload",
+    "postinstall": "sentio gen"
+  },
+  "dependencies": {
+    "@sentio/sdk": "^2.39.6",
+    "@types/jest": "^29.5.12",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "^20.14.9"
+  },
+  "devDependencies": {
+    "@sentio/cli": "^2.18.7",
+    "lru-cache": "^7.14.1",
+    "typescript": "^5.5.2"
+  }
+}
