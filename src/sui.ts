@@ -95,18 +95,25 @@ const cache = new LRU<bigint, any>({
 // Function to handle price feed updates
 function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
   const priceId = decodeBytesArray(evt.data_decoded.price_feed.price_identifier.bytes)
+  console.log(`Price ID: ${priceId}`)
   const symbol = PRICE_MAP.get(priceId) || "not listed"
+  console.log(`Symbol: ${symbol}`)
   const isSponsored = sponsoredFeeds.has(priceId) ? "true" : "false"
+  console.log(`Is Sponsored: ${isSponsored}`)
   const tokenPair = sponsoredFeeds.get(priceId) || symbol;
   const labels = { priceId, tokenPair, isSponsored }
 
   // Check if the price feed is native
   const isNative = (priceId == "0x23d7315113f5b1d3ba7a83604c44b94d79f4fd69af77f804fc7f920a6dc65744") ? "true" : "false"
+  console.log(`Is Native: ${isNative}`)
   
   // Record the price and EMA price
-  priceGauage.record(ctx, getPrice(evt.data_decoded.price_feed.price), labels)
-  evmPriceGauage.record(ctx, getPrice(evt.data_decoded.price_feed.price), labels)
-  priceEMAGauage.record(ctx, getPrice(evt.data_decoded.price_feed.ema_price), labels)
+  const priceValue = getPrice(evt.data_decoded.price_feed.price)
+  const emaPriceValue = getPrice(evt.data_decoded.price_feed.ema_price)
+  console.log(`Price: ${priceValue}, EMA Price: ${emaPriceValue}`)
+  priceGauage.record(ctx, priceValue, labels)
+  evmPriceGauage.record(ctx, priceValue, labels)
+  priceEMAGauage.record(ctx, emaPriceValue, labels)
   
   // Record the occurrence of a price update and increment the counter
   price_update_occur.record(ctx, ctx.timestamp.getTime(), labels)
@@ -127,9 +134,11 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
 
   // Add contract address to the set
   contractAddresses.add(ctx.contractAddress)
+  console.log(`Contract Addresses: ${Array.from(contractAddresses)}`)
   
   // Add user address to the set
   userAddresses.add(ctx.sender)
+  console.log(`User Addresses: ${Array.from(userAddresses)}`)
 
   // Emit logs for the processor
   ctx.eventLogger.emit("PythPriceUpdate", {
