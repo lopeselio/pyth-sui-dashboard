@@ -100,7 +100,7 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
   console.log(`Symbol: ${symbol}`)
   const isSponsored = sponsoredFeeds.has(priceId) ? "true" : "false"
   console.log(`Is Sponsored: ${isSponsored}`)
-  const tokenPair = sponsoredFeeds.get(priceId) || symbol;
+  const tokenPair = sponsoredFeeds.get(priceId) || symbol || "unknown";
   const labels = { priceId, tokenPair, isSponsored }
 
   // Check if the price feed is native
@@ -151,6 +151,7 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
     isSponsored: isSponsored,
     contractAddress: ctx.contractAddress,
     sender: ctx.sender,
+    symbol: symbol,
     amount: evt.data_decoded.price_feed.price // Example value, adjust as needed
   });
 
@@ -159,7 +160,8 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
     distinctId: ctx.sender, 
     severity: LogLevel.INFO, 
     message: `Total Pyth Price Updates incremented at ${ctx.blockNumber}`,
-    totalPriceUpdates: totalPriceUpdates
+    totalPriceUpdates: totalPriceUpdates,
+    symbol: symbol
   });
 
   // Emit log for daily price updates
@@ -169,7 +171,8 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
     message: `Daily Pyth Price Updates incremented for ${tokenPair} at ${ctx.blockNumber}`,
     dailyPriceUpdates: dailyPriceUpdates,
     priceId: priceId,
-    tokenPair: tokenPair
+    tokenPair: tokenPair,
+    symbol: symbol
   });
 
   // Emit log for total and daily sponsored updates
@@ -181,7 +184,8 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
       totalSponsoredUpdates: totalSponsoredUpdates,
       dailySponsoredUpdates: dailySponsoredUpdates,
       priceId: priceId,
-      tokenPair: tokenPair
+      tokenPair: tokenPair,
+      symbol: symbol
     });
   } else {
     // Emit log for total and daily non-sponsored updates
@@ -192,7 +196,8 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
       totalNonSponsoredUpdates: totalNonSponsoredUpdates,
       dailyNonSponsoredUpdates: dailyNonSponsoredUpdates,
       priceId: priceId,
-      tokenPair: tokenPair
+      tokenPair: tokenPair,
+      symbol: symbol
     });
   }
 
@@ -234,6 +239,7 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
     dailyFees: dailyFees,
     priceId: priceId,
     tokenPair: tokenPair,
+    symbol: symbol,
     feeAmount: feeAmount
   });
 
@@ -254,6 +260,7 @@ function handlePriceFeedUpdate(evt: any, ctx: any, isOldContract = false) {
     dailyTxCosts: dailyTxCosts,
     priceId: priceId,
     tokenPair: tokenPair,
+    symbol: symbol,
     txCost: txCost
   });
 }
