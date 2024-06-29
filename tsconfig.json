@@ -5,6 +5,8 @@
     "sourceMap": true,
     "target": "esnext",
     "esModuleInterop": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "module": "nodenext",

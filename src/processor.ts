@@ -1,1 +1,1 @@
-import './sui.js'
+import './sui.ts'
